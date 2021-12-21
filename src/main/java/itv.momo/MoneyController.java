@@ -1,24 +1,47 @@
 package itv.momo;
 
+import java.util.*;
+
 interface IMoneyController {
     public void add(Integer coin);
+    public void add(Integer coin, Integer cnt);
+    public void remove(Integer coin, Integer cnt);
     //public Integer getCoins();
-    public void refund(Integer amount);
+    public HashMap<Integer, Integer> refund(Integer amount);
 }
 
 
 public class MoneyController implements IMoneyController{
-
+    private HashMap<Integer, Integer> data = new HashMap<>();
     public void add(Integer coin) {
+        add(coin, 1);
+    }
 
+    @Override
+    public void add(Integer coin, Integer cnt) {
+        Integer total = data.getOrDefault(coin, 0) + cnt;
+        data.put(coin, total);
+    }
+
+    @Override
+    public void remove(Integer coin, Integer cnt) {
+        Integer total = data.getOrDefault(coin, 0) - cnt;
+        data.put(coin, total);
     }
 
 
-    public void refund(Integer amount) {
+    public HashMap<Integer, Integer> refund(Integer amount) {
+        HashMap<Integer, Integer> refundCoin = new HashMap<>();
 
+        SortedSet<Integer> keys = new TreeSet<Integer>(data.keySet());
+        for (Integer coin : keys) {
+            if (amount > coin) {
+                Integer cnt = data.get(coin);
+                Integer rCnt = Math.min(amount / coin, cnt);
+                amount -= coin * rCnt;
+                refundCoin.put(coin, cnt);
+            }
+        }
+        return refundCoin;
     }
-
-//    public MoneyControler() {
-//
-//    }
 }

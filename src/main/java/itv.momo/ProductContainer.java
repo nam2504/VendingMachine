@@ -1,24 +1,20 @@
 package itv.momo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 interface IProductContainer {
     public Integer add(Item item) throws Exception;
     public void add(Integer idx, Item item) throws Exception;
     public void update(Integer idx, Item item) throws Exception;
     public Item getItem(Integer idx);
+    public Integer estimate(HashMap<Integer, Integer> itemCnt);
 }
 
 public class ProductContainer implements IProductContainer {
-    private Item[] data;
+    private final Item[] data;
     private Integer cnt;
 
-//    public ProductContainer(Item[] data) {
-//        this.data = data;
-//        this.cnt = 0;
-//        for (Item item : data) {
-//            if (item != null)
-//                this.cnt += 1;
-//        }
-//    }
 
     public ProductContainer(Integer size) {
         this.data = new Item[size];
@@ -86,6 +82,17 @@ public class ProductContainer implements IProductContainer {
     }
 
     public Item getItem(Integer idx) {
-        return null;
+        return data[idx];
+    }
+
+    @Override
+    public Integer estimate(HashMap<Integer, Integer> itemCnt) {
+        int sum = 0;
+        for (Map.Entry<Integer, Integer> entry : itemCnt.entrySet()) {
+            Item item = getItem(entry.getKey());
+            if (item != null)
+                sum += item.price() * entry.getValue();
+        }
+        return sum;
     }
 }

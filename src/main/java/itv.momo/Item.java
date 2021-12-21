@@ -28,7 +28,7 @@ public class Item {
         this.count = cnt;
     }
 
-    public void buy() {
-        this.count -= 1;
+    public void remove(Integer cnt) {
+        this.count -= cnt;
     }
 }

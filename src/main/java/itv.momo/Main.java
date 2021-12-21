@@ -37,15 +37,4 @@ public class Main {
         }
     }
 
-
-
-    public static void println(String msg) {
-        Console.out().println(msg);
-    }
-
-    @NotNull
-    public static Integer read() {
-        String line = System.console().readLine();
-        return Integer.parseInt(line);
-    }
 }
