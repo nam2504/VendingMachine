@@ -28,7 +28,7 @@ public class ProductContainer implements IProductContainer {
 
     public Integer add(Item item) throws Exception {
         if (cnt == data.length) {
-            throw new Exception("Full item!!!"); //TODO: define new Exception
+            throw new Exception(ExceptionMsg.FullItem);
         }
 
         for (int i = 0; i < data.length; i++) {
@@ -43,11 +43,11 @@ public class ProductContainer implements IProductContainer {
 
     public void add(Integer idx, Item item) throws Exception {
         if (item == null) {
-            throw new Exception("Adding Invalid item!!!");
+            throw new Exception(ExceptionMsg.AddInvalidItem);
         }
 
         if (data[idx] != null) {
-            throw new Exception("Adding item in exited Item. Idx: %d !!!");
+            throw new Exception(ExceptionMsg.AddItemInExitedIndex(idx));
         }
 
         _add(idx, item);
@@ -55,11 +55,11 @@ public class ProductContainer implements IProductContainer {
 
     public void update(Integer idx, Item item) throws Exception {
         if (item == null) {
-            throw new Exception("Updating Invalid item!!!");
+            throw new Exception(ExceptionMsg.UpdateInvalidItem);
         }
 
         if (0 < idx || idx >= data.length) {
-            throw new Exception("Updating invalid index %d!!!");
+            throw new Exception(ExceptionMsg.UpdateInvalidIndex(idx));
         }
 
         if (data[idx] != null) {
@@ -91,7 +91,7 @@ public class ProductContainer implements IProductContainer {
         for (Map.Entry<Integer, Integer> entry : itemCnt.entrySet()) {
             Item item = getItem(entry.getKey());
             if (item != null)
-                sum += item.price() * entry.getValue();
+                sum += item.getPrice() * entry.getValue();
         }
         return sum;
     }

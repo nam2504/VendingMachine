@@ -15,7 +15,7 @@ public class Item {
         return this.name;
     }
 
-    public Integer price() {
+    public Integer getPrice() {
         return this.price;
     }
 

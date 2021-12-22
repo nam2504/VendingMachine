@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 interface IVendMachine {
-    public void addProduct(Item item) throws Exception;
+    public Integer addProduct(Item item) throws Exception;
     public void incProduct(Integer idx) throws Exception;
     public void decProduct(Integer idx) throws Exception;
     // user insert money
@@ -20,31 +20,32 @@ public class VendMachine implements IVendMachine{
     public ICart cart;
 
 
+    public VendMachine() {
+        init(4);
+    }
+
     public VendMachine(Integer productSize) {
+        init(productSize);
+    }
+
+    private void init(Integer size) {
         this.moneyController = new MoneyController();
-        this.productContainer = new ProductContainer(productSize);
+        this.productContainer = new ProductContainer(size);
         this.cart = new Cart();
     }
 
-    public void addProduct(Item item) throws Exception {
-        productContainer.add(item);
+    public Integer addProduct(Item item) throws Exception {
+        return productContainer.add(item);
     }
 
     public void insertMoney(Integer value) throws Exception {
-        if (Coin.isValid(value)) {
-            moneyController.add(value);
-            cart.addMoney(value);
-        } else {
-            throw new Exception(String.format("Invalid coin! coin : %,d ; Valid coin: %s", value, Coin.asString()));
-        }
+        moneyController.add(value);
+        cart.addMoney(value);
     }
 
     public void buy() throws Exception {
         // check enough money to buy
         Integer estimate = productContainer.estimate(cart.product);
-        if (cart.getMoney() < estimate) {
-            throw new Exception("Not enough money to buy!");
-        }
 
         // payment in Cart and Dec product
         for (Map.Entry<Integer, Integer> entry : cart.payment(estimate).entrySet()) {
@@ -72,12 +73,8 @@ public class VendMachine implements IVendMachine{
 
     @Override
     public void incProduct(Integer idx) throws Exception {
-        if (cart.getProduct(idx) < productContainer.getItem(idx).getCount()) {
-            cart.addProduct(idx);
-        } else {
-            throw new Exception("Not enough Item to choose!");
-        }
-
+        Item itemInContainer = productContainer.getItem(idx);
+        cart.addProduct(idx, itemInContainer);
     }
 
     @Override

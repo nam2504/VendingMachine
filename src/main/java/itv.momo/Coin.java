@@ -1,6 +1,5 @@
 package itv.momo;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,7 +11,5 @@ public class Coin {
         return coins.contains(coin);
     }
 
-    public static String asString() {
-        return String.join(", ", (CharSequence) coins);
-    }
+    public static final String asString = coins.stream().map(String::valueOf).collect(Collectors.joining(", "));
 }
