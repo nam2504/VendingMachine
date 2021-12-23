@@ -5,26 +5,27 @@ import java.util.HashMap;
 interface ICart {
     public HashMap<Integer, Integer> product = new HashMap<>(); // product idx -> cnt
 
-    public void addMoney(Integer coin);
-    public void addProduct(Integer idx, Item itemInContainer) throws Exception;
-    public void removeProduct(Integer idx) throws Exception;
-    public Integer getProduct(Integer idx);
+    public void addMoney(int coin);
+    public void addProduct(int idx, Item itemInContainer) throws Exception;
+    public void removeProduct(int idx) throws Exception;
+    public int getItemQuantity(int idx);
+    public HashMap<Integer, Integer> getAllItemQuantity();
 
-    public Integer getMoney();
-    public void refund();
-    public HashMap<Integer, Integer> payment(Integer price) throws Exception;
+    public int getMoney();
+    public void useMoney(int amount);
+    public HashMap<Integer, Integer> payment(int price) throws Exception;
 
 }
 
 public class Cart implements ICart {
     public Integer budget = 0; // coin -> cnt
     @Override
-    public void addMoney(Integer coin) {
+    public void addMoney(int coin) {
         budget += coin;
     }
 
     @Override
-    public void addProduct(Integer idx, Item itemInContainer) throws Exception {
+    public void addProduct(int idx, Item itemInContainer) throws Exception {
         if (itemInContainer == null) {
             throw new Exception(ExceptionMsg.SelectNonExitItem);
         }
@@ -38,8 +39,8 @@ public class Cart implements ICart {
     }
 
     @Override
-    public void removeProduct(Integer idx) throws Exception {
-        Integer cnt = product.getOrDefault(idx, 0) - 1;
+    public void removeProduct(int idx) throws Exception {
+        int cnt = product.getOrDefault(idx, 0) - 1;
         if (cnt < 0) {
             throw new Exception(ExceptionMsg.NoneItemInCartToRemove);
         }
@@ -47,22 +48,27 @@ public class Cart implements ICart {
     }
 
     @Override
-    public Integer getProduct(Integer idx) {
+    public int getItemQuantity(int idx) {
         return product.getOrDefault(idx, 0);
     }
 
     @Override
-    public Integer getMoney() {
+    public HashMap<Integer, Integer> getAllItemQuantity() {
+        return product;
+    }
+
+    @Override
+    public int getMoney() {
         return budget;
     }
 
     @Override
-    public void refund() {
-        this.budget = 0;
+    public void useMoney(int amount) {
+        this.budget -= amount;
     }
 
     @Override
-    public HashMap<Integer, Integer> payment(Integer price) throws Exception {
+    public HashMap<Integer, Integer> payment(int price) throws Exception {
         if (this.budget < price) {
             throw new Exception(ExceptionMsg.UserNotEnoughMoney(budget, price));
         }

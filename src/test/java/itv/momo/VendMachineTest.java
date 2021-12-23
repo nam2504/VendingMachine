@@ -33,7 +33,7 @@ class VendMachineTest {
             Integer price = 10000;
             Integer cnt = 10;
             assertEquals(idx, addProduct(name, price, cnt));
-            Item item = vendMachine.productContainer.getItem(idx);
+            Item item = vendMachine.getItem(idx);
             assertEquals(name, item.getName());
             assertEquals(price, item.getPrice());
             assertEquals(cnt, item.getCount());

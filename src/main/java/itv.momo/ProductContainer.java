@@ -4,19 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 interface IProductContainer {
-    public Integer add(Item item) throws Exception;
-    public void add(Integer idx, Item item) throws Exception;
-    public void update(Integer idx, Item item) throws Exception;
-    public Item getItem(Integer idx);
-    public Integer estimate(HashMap<Integer, Integer> itemCnt);
+    public int add(Item item) throws Exception;
+    public void add(int idx, Item item) throws Exception;
+    public void update(int idx, Item item) throws Exception;
+    public Item getItem(int idx) throws Exception;
+    public Item[] getAllItem();
+    public int estimate(HashMap<Integer, Integer> itemCnt);
 }
 
 public class ProductContainer implements IProductContainer {
     private final Item[] data;
-    private Integer cnt;
+    private int cnt;
 
 
-    public ProductContainer(Integer size) {
+    public ProductContainer(int size) {
         this.data = new Item[size];
         this.cnt = 0;
     }
@@ -26,7 +27,7 @@ public class ProductContainer implements IProductContainer {
         this.cnt = 0;
     }
 
-    public Integer add(Item item) throws Exception {
+    public int add(Item item) throws Exception {
         if (cnt == data.length) {
             throw new Exception(ExceptionMsg.FullItem);
         }
@@ -41,7 +42,7 @@ public class ProductContainer implements IProductContainer {
         return -1;
     }
 
-    public void add(Integer idx, Item item) throws Exception {
+    public void add(int idx, Item item) throws Exception {
         if (item == null) {
             throw new Exception(ExceptionMsg.AddInvalidItem);
         }
@@ -53,7 +54,7 @@ public class ProductContainer implements IProductContainer {
         _add(idx, item);
     }
 
-    public void update(Integer idx, Item item) throws Exception {
+    public void update(int idx, Item item) throws Exception {
         if (item == null) {
             throw new Exception(ExceptionMsg.UpdateInvalidItem);
         }
@@ -69,27 +70,40 @@ public class ProductContainer implements IProductContainer {
     }
 
 
-    protected void _add(Integer idx, Item item) {
+    protected void _add(int idx, Item item) {
         cnt += 1;
         data[idx] = item;
     }
 
-    protected Item remove(Integer idx) {
+    protected Item remove(int idx) {
         cnt -= 1;
         Item item = data[idx];
         data[idx] = null;
         return item;
     }
 
-    public Item getItem(Integer idx) {
+    public Item getItem(int idx) throws Exception {
+        if (idx >= data.length) {
+            throw new Exception(ExceptionMsg.SelectNonExitItem);
+        }
         return data[idx];
     }
 
     @Override
-    public Integer estimate(HashMap<Integer, Integer> itemCnt) {
+    public Item[] getAllItem() {
+        return data;
+    }
+
+    @Override
+    public int estimate(HashMap<Integer, Integer> itemCnt) {
         int sum = 0;
         for (Map.Entry<Integer, Integer> entry : itemCnt.entrySet()) {
-            Item item = getItem(entry.getKey());
+            Item item = null;
+            try {
+                item = getItem(entry.getKey());
+            } catch (Exception ignored) {
+
+            }
             if (item != null)
                 sum += item.getPrice() * entry.getValue();
         }
