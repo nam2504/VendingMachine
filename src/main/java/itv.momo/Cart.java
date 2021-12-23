@@ -3,8 +3,6 @@ package itv.momo;
 import java.util.HashMap;
 
 interface ICart {
-    public HashMap<Integer, Integer> product = new HashMap<>(); // product idx -> cnt
-
     public void addMoney(int coin);
     public void addProduct(int idx, Item itemInContainer) throws Exception;
     public void removeProduct(int idx) throws Exception;
@@ -13,11 +11,12 @@ interface ICart {
 
     public int getMoney();
     public void useMoney(int amount);
-    public HashMap<Integer, Integer> payment(int price) throws Exception;
+    public void payment(int price) throws Exception;
 
 }
 
 public class Cart implements ICart {
+    public HashMap<Integer, Integer> product = new HashMap<>(); // product idx -> cnt
     public Integer budget = 0; // coin -> cnt
     @Override
     public void addMoney(int coin) {
@@ -68,14 +67,12 @@ public class Cart implements ICart {
     }
 
     @Override
-    public HashMap<Integer, Integer> payment(int price) throws Exception {
+    public void payment(int price) throws Exception {
         if (this.budget < price) {
             throw new Exception(ExceptionMsg.UserNotEnoughMoney(budget, price));
         }
 
         this.budget -= price;
-        HashMap<Integer, Integer> p = (HashMap<Integer, Integer>) product.clone();
         product.clear();
-        return p;
     }
 }

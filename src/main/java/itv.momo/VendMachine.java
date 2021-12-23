@@ -55,11 +55,14 @@ public class VendMachine implements IVendMachine{
     }
 
     public void buy() throws Exception {
+        HashMap<Integer, Integer> cartItem = cart.getAllItemQuantity();
         // check enough money to buy
-        int estimate = productContainer.estimate(cart.product);
+        int estimate = productContainer.estimate(cartItem);
 
-        // payment in Cart and Dec product
-        for (Map.Entry<Integer, Integer> entry : cart.payment(estimate).entrySet()) {
+        // payment in Cart
+        cart.payment(estimate);
+        // and Dec product
+        for (Map.Entry<Integer, Integer> entry : cartItem.entrySet()) {
             Integer idx = entry.getKey();
             Integer cnt = entry.getValue();
 
