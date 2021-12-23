@@ -11,9 +11,9 @@ class VendMachineTest {
     @BeforeEach
     void setUp() {
         try {
-            addProduct("Coke", 10000, 10);
-            addProduct("Pepsi", 10000, 10);
-            addProduct("Soda", 20000, 10);
+            addProduct("Coke", 10000, 3);
+            addProduct("Pepsi", 10000, 3);
+            addProduct("Soda", 20000, 3);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,22 +76,90 @@ class VendMachineTest {
     }
 
     @Test
-    void buy() {
-
-    }
-
-    @Test
     void refund() {
+        try {
+            vendMachine.insertMoney(20000);
+            vendMachine.incProduct(0);
+            vendMachine.buy();
+            vendMachine.refund();
+            fail();
+        } catch (Exception e) {
+            assertEquals(vendMachine.userBudget(), 10000);
+        }
+
+        try {
+            // buy to reset money
+            vendMachine.incProduct(0);
+            vendMachine.buy();
+            //
+            vendMachine.insertMoney(200000);
+            vendMachine.insertMoney(200000);
+            vendMachine.insertMoney(100000);
+            vendMachine.insertMoney(10000);
+            vendMachine.insertMoney(10000);
+            vendMachine.insertMoney(10000);
+
+            vendMachine.refund();
+
+            assertEquals(vendMachine.userBudget(), 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
 
     }
 
     @Test
     void incProduct() {
+        int idx = 0;
+        try {
+            vendMachine.incProduct(idx);
+            vendMachine.incProduct(idx);
+            vendMachine.incProduct(idx);
+        } catch (Exception e) {
+            fail();
+        }
+        try {
+            vendMachine.incProduct(idx);
+            fail();
+        } catch (Exception e) {
+            assertEquals(ExceptionMsg.NotEnoughItemToSelect(4, 3), e.getMessage());
+        }
+
+        try {
+            vendMachine.incProduct(1000);
+            fail();
+        } catch (Exception e) {
+            assertEquals(ExceptionMsg.SelectNonExitItem, e.getMessage());
+        }
 
     }
 
     @Test
-    void decProduct() {
+    void buy() {
+        try {
+            vendMachine.incProduct(0);
+            vendMachine.buy();
+            fail();
+        } catch (Exception e) {
+            assertEquals(ExceptionMsg.UserNotEnoughMoney(0, 10000), e.getMessage());
+        }
+        try {
+            vendMachine.insertMoney(10000);
+            vendMachine.buy();
+        } catch (Exception e) {
+            fail();
+        }
+
+        try {
+            vendMachine.insertMoney(20000);
+            vendMachine.incProduct(0);
+            vendMachine.buy();
+            assertEquals(vendMachine.userBudget(), 10000);
+        } catch (Exception e) {
+            fail();
+        }
 
     }
 }

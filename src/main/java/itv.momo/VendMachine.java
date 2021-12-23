@@ -85,8 +85,9 @@ public class VendMachine implements IVendMachine{
             System.out.printf("Coin %,d x %d\n", coin, cnt);
             cart.useMoney(coin * cnt);
         });
-
         int remainMoney = cart.getMoney();
+        System.out.println("Total refund: " + (money - remainMoney));
+
         if (remainMoney > 0) {
             throw new Exception(ExceptionMsg.NotEnoughMoneyToRefund(remainMoney));
         }

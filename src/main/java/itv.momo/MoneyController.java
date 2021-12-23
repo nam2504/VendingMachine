@@ -35,14 +35,15 @@ public class MoneyController implements IMoneyController{
 
     public HashMap<Integer, Integer> refund(int amount) {
         HashMap<Integer, Integer> refundCoin = new HashMap<>();
-
-        SortedSet<Integer> keys = new TreeSet<Integer>(data.keySet());
+        int remain = amount;
+        SortedSet<Integer> keys = new TreeSet<Integer>(data.keySet()).descendingSet();
         for (Integer coin : keys) {
-            if (amount > coin) {
-                Integer cnt = data.get(coin);
-                Integer rCnt = Math.min(amount / coin, cnt);
-                amount -= coin * rCnt;
-                refundCoin.put(coin, cnt);
+            if (remain >= coin) {
+                int cnt = data.get(coin);
+                int rCnt = Math.min(remain / coin, cnt);
+                remain -= coin * rCnt;
+                data.put(coin, cnt - rCnt);
+                refundCoin.put(coin, rCnt);
             }
         }
         return refundCoin;
